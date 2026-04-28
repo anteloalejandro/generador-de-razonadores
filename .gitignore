@@ -1,0 +1,15 @@
+.venv
+venv
+
+output
+
+agent/__pycache__
+agent/.adk
+agent/.DS_Store
+agent/output
+
+__pycache__
+
+.adk
+memoria.pdf
+agent/.rag_db
