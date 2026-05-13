@@ -173,8 +173,9 @@ def test_mas_code(mas2j_code: str, agents_dict: dict) -> str:
             output += f"--- STDOUT ---\n{result.stdout}\n"
         if result.stderr:
             output += f"--- STDERR ---\n{result.stderr}\n"
-            
-        return output
+
+        # limita los caracteres para no superar el máximo de tokens
+        return output[:10000] + "\n === FIN DE EJECUCIÓN === "
         
     except subprocess.TimeoutExpired as e:
         # En muchos sistemas, jason arranca la GUI y se queda pillado. Guardamos el estado.

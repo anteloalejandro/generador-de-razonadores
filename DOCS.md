@@ -55,3 +55,11 @@ if hasattr(e, 'stderr') and e.stderr:
 ```
 
 Resulta que tanto la salida de los errores como la salida de los agentes funcionales van por `stderr`.
+
+## Los bucles infinitos superan el máximo de tokens
+
+Cuando el agente genera sin querer un bucle infinito en el que muestra salida, puede superar el máximo de tokens del modelo y hacer que todo se rompa.
+
+### Solución
+
+Lo solucionamos limitando el tamaño de la salida a unos 10000 caracteres, que debería producir salidas por debajo del limite de 130000 tokens del modelo.
