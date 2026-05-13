@@ -21,7 +21,7 @@ REGLAS MAS2J: Usa 'MAS' en mayúsculas. NO pongas la extensión '.asl' en la lis
    - SEPARACIÓN DE ACCIONES: Las acciones dentro de un plan DEBEN estar separadas únicamente por punto y coma (`;`).
    - NUNCA uses comas (`,`) para separar acciones.
    - Las creencias y objetivos se deben declarar al principio del fichero, antes de los planes.
-   - El primer plan SIEMPRE debe ser `!start` acabado en punto (`.`)
+   - El plan inicial SIEMPRE debe ir acompañado de una creencia inicial. Por ejemplo, si el plan inicial es `+!start <- ...`, DEBE haber antes una creencia `!start.`, o no se ejecutará el agente.
    - Las variables DEBEN empezar con letra Mayúscula (ej. PosX). Los átomos y literales con minúscula (ej. mesa).
    - Para poder operar con un valor de una creencia hay que instanciarlo siempre primero en una variable.
    - El formato correcto es: `+!meta <- accion1; accion2; accion3.` ¡ATENCIÓN: TODOS los planes y creencias DEBEN terminar obligatoriamente con un PUNTO FINAL (`.`)!
