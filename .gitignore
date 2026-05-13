@@ -13,3 +13,6 @@ __pycache__
 .adk
 memoria.pdf
 agent/.rag_db
+
+bdi_agent_example
+news_agent
