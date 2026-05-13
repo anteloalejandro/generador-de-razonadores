@@ -286,7 +286,7 @@ web_searcher = LlmAgent(
 )
 
 doc_searcher = LlmAgent(
-    name="Doc_Agent",
+    name="Doc_Searcher",
     description="Agente buscador de documentación local sobre el lenguaje Jason",
     model=model,
     tools=[rag.search_local_docs],
@@ -328,7 +328,7 @@ tester = LlmAgent(
 refiner = LoopAgent(
     name="Refiner",
     description="Agente refinador. Repite el proceso de desarrollo hasta que el resultado del sistema Multi-Agente es satisfactorio",
-    sub_agents=[aggregator, coder, tester],
+    sub_agents=[aggregator, validator, tester],
     max_iterations=10
 )
 
@@ -343,7 +343,7 @@ saver = LlmAgent(
 
 root_agent = SequentialAgent(
     name="BDI_Developer",
-    description="Agente experto en desarrollador proyectos Multi-Agente BDI en Jason",
+    description="Pipeline completo para el desarrollo proyectos Multi-Agente BDI en Jason: investigación → programación → validación → testeo → guardado",
     sub_agents=[refiner, saver]
 )
 
