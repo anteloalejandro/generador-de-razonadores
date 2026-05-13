@@ -112,6 +112,12 @@ tall(john).
 likes(john, music).
 ```
 
+**Debe haber por lo menos una creencia inicial para que el agente trate de cumplir sus objetivos.**
+```jason
+!start. // creencia inicial
++!start <- ... // objetivo
+```
+
 Las creencias también pueden tener **anotaciones**:
 ```jason
 busy(john)[expires(autum)].
