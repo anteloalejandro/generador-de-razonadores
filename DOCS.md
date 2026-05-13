@@ -66,10 +66,12 @@ Lo solucionamos limitando el tamaño de la salida a unos 10000 caracteres, que d
 
 # Arquitectura multiagente
 
+La estructura del sistema multiagente, viendo sólo las hojas del árbol, es algo así:
+
 ```
-               ╭── Web_Searcher ──╮
-╭── Searcher ──┤                  ├── Coder ─── Validator ─── Tester ──╮
-│              ╰── Doc_Searcher ──╯                                    │
-│                                                                      │
-╰──────────────────────────────────────────────────────────────────────╯
+   ╭── Web_Searcher ──╮
+╭──┤                  ├── Coder ─── Validator ─── Tester ──┬── Saver
+│  ╰── Doc_Searcher ──╯                                    │
+│                                                          │
+╰──────────────────────────────────────────────────────────╯
 ```

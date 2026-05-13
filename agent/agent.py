@@ -273,12 +273,16 @@ model = LiteLlm(
     api_key="sk-LFXs1kjaSxtEDgOMlPUOpA"
 )
 
+def get_instructions(filename: str):
+    return open(Path(cwd, "instructions", filename), encoding="utf-8").read()
+
 web_searcher = LlmAgent(
     name="Web_Searcher",
     description="Agente buscador de ejemplos de lenguaje Jason",
     model=model,
     tools=[search_github_examples],
     output_key="examples",
+    instruction=get_instructions("web_searcher.md")
 )
 
 doc_searcher = LlmAgent(
@@ -287,11 +291,12 @@ doc_searcher = LlmAgent(
     model=model,
     tools=[rag.search_local_docs],
     output_key="documentation",
+    instruction=get_instructions("doc_searcher.md")
 )
 
-searcher = ParallelAgent(
-    name="Searcher",
-    description="Agente buscador de información sobre el lenguaje Jason en diversas fuentes",
+aggregator = ParallelAgent(
+    name="Aggregator",
+    description="Agente recopilador de información sobre el lenguaje Jason en diversas fuentes",
     sub_agents = [web_searcher, doc_searcher]
 )
 
@@ -301,6 +306,7 @@ coder = LlmAgent(
     model=model,
     tools=[calculate_fibonacci],
     output_key="agent_code",
+    instruction=get_instructions("coder.md")
 )
 
 validator = LoopAgent(
@@ -315,13 +321,14 @@ tester = LlmAgent(
     description="Agente testeador. Ejecuta sistemas Multi-Agente y comprueba si el funcionamiento es correcto",
     model=model,
     tools=[test_mas_code],
-    output_key="agent_output"
+    output_key="agent_output",
+    instruction=get_instructions("tester.md")
 )
 
 refiner = LoopAgent(
     name="Refiner",
     description="Agente refinador. Repite el proceso de desarrollo hasta que el resultado del sistema Multi-Agente es satisfactorio",
-    sub_agents=[searcher, coder, tester],
+    sub_agents=[aggregator, coder, tester],
     max_iterations=10
 )
 
@@ -330,7 +337,8 @@ saver = LlmAgent(
     description="Su único trabajo es guardar el código Multi-Agente generado",
     model=model,
     tools=[save_mas_code],
-    output_key="save_info"
+    output_key="save_info",
+    instruction=get_instructions("saver.md")
 )
 
 root_agent = SequentialAgent(
