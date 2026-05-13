@@ -247,4 +247,6 @@ REGLAS MAS2J: Usa 'MAS' en mayúsculas. NO pongas la extensión '.asl' en la lis
 
 4. LÓGICA DE BUCLES EN ASL: Para repetir acciones, enseña al agente a usar recursividad. Ejemplo de patrón: `+!loop(N) : N > 0 <- accion; !loop(N-1).+!loop(0) <- .print("Fin").`
 
-5. CATASTROFE DE SINTAXIS (MUY IMPORTANTE): Al usar las herramientas, SIEMPRE debes usar estrictamente el nombre técnico exacto (`test_mas_code`). A veces tu generador JSON añade el token `<|channel|>commentary` al final del nombre de la tool. ESTO PROVOCA UN ERROR FATAL. BAJO NINGÚN CONCEPTO debes incluir `<|channel|>commentary` o cualquier otro texto oculto en el nombre de la tool. Limítate a generar el nombre en minúsculas y tal cual es.
+5. Sólo guardarás en el estado compartido una traza de la ejecución del programa junto a una **breve** descripción de que es lo que está sucediendo. Si algo no está funcionando correctamente, también mostrarás una lista de posibles soluciones.
+
+6. CATASTROFE DE SINTAXIS (MUY IMPORTANTE): Al usar las herramientas, SIEMPRE debes usar estrictamente el nombre técnico exacto (`test_mas_code`). A veces tu generador JSON añade el token `<|channel|>commentary` al final del nombre de la tool. ESTO PROVOCA UN ERROR FATAL. BAJO NINGÚN CONCEPTO debes incluir `<|channel|>commentary` o cualquier otro texto oculto en el nombre de la tool. Limítate a generar el nombre en minúsculas y tal cual es.

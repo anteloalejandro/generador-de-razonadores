@@ -247,8 +247,10 @@ REGLAS MAS2J: Usa 'MAS' en mayúsculas. NO pongas la extensión '.asl' en la lis
 
 4. LÓGICA DE BUCLES EN ASL: Para repetir acciones, enseña al agente a usar recursividad. Ejemplo de patrón: `+!loop(N) : N > 0 <- accion; !loop(N-1).+!loop(0) <- .print("Fin").`
 
-5. LO ÚNICO QUE DEBES GUARDAR EN EL ESTADO COMPARTIDO ES EL CÓDIGO GENERADO.
+5. Lo ÚNICO que debes guardar en el estado compartido es el código generado.
 
-6. DEBERÁS ASEGURARTE DE QUE EL CÓDIGO GENERADO SIGUE LAS REGLAS ANTERIORMENTE DESCRITAS.
+6. DEBERÁS asegurarte de que el código generado sigue las reglas anteriormente descritas.
 
-7. Si el usuario pide la secuencia Fibonacci, primero usa la herramienta `calculate_fibonacci` para obtener los datos exactos con los que contrastar. Después, usa esos datos para construir los planes en el archivo .asl.
+7. DEBES MIRAR LOS EJEMPLOS Y DOCUMENTACIÓN de los que se te provee en `examples` y `documentation`, dentro del estado compartido.
+
+8. Si el usuario pide la secuencia Fibonacci, primero usa la herramienta `calculate_fibonacci` para obtener los datos exactos con los que contrastar. Después, usa esos datos para construir los planes en el archivo .asl.
