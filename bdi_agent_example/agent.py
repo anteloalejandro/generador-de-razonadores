@@ -52,38 +52,28 @@ def resolve_jason_command():
 
     return None
 
-def search_github_examples(path: str = "", category: str = "examples") -> str:
+def search_github_examples(path: str = "") -> str:
     """
-    Accede a diferentes fuentes de código e información de Jason en GitHub.
+    Permite acceder a los ejemplos oficiales de código de Jason (BDI) en GitHub.
+    Útil para consultar cómo se implementan ciertas características en Jason.
     
     Args:
-        path: Ruta relativa del archivo o directorio.
-        category: 
-            - 'examples': Ejemplos oficiales (blocks, auction, etc.) [Por defecto].
-            - 'demos': Demostraciones de características específicas.
-            - 'applications': Proyectos y aplicaciones reales de la comunidad.
-            - 'kernel': Código interno de Jason (útil para entender el funcionamiento avanzado).
+        path: La ruta relativa del archivo o directorio de ejemplo a consultar dentro de la carpeta 'examples' de Jason.
+              Déjalo vacío ("") para listar los directorios y archivos de la raíz de ejemplos.
+              Puedes usar esta herramienta primero con "" para ver qué ejemplos hay, y luego llamarla 
+              de nuevo con la ruta específica, ej. "blocks/blocks.mas2j" o "auction/ag1.asl".
     """
-    # Mapeo de categorías a URLs de la API de GitHub
-    SOURCES = {
-        "examples": "https://api.github.com/repos/jason-lang/jason/contents/examples",
-        "demos": "https://api.github.com/repos/jason-lang/jason/contents/demos",
-        "applications": "https://api.github.com/repos/jason-lang/jason-applications/contents",
-        "kernel": "https://api.github.com/repos/jason-lang/jason/contents/src/jason"
-    }
-    
-    base_url = SOURCES.get(category, SOURCES["examples"])
-    url = f"{base_url}/{path}".strip("/")
+    base_api_url = "https://api.github.com/repos/jason-lang/jason/contents/examples"
+    url = f"{base_api_url}/{path}".strip("/")
     
     try:
-        # Mantenemos la lógica original de urllib y manejo de JSON
         req = urllib.request.Request(url, headers={'User-Agent': 'Python-urllib'})
         with urllib.request.urlopen(req) as response:
             data = json.loads(response.read().decode('utf-8'))
             
             if isinstance(data, list):
-                items = [f"[{item['type']}] {item['path']}" for item in data]
-                return f"Contenido en {category}/{path}:\n" + "\n".join(items)
+                items = [f"[{item['type']}] {item['path'].replace('examples/', '', 1)}" for item in data]
+                return f"Contenido de '{path or 'raíz'}':\n" + "\n".join(items)
             
             elif isinstance(data, dict) and data.get("type") == "file":
                 download_url = data.get("download_url")
@@ -91,15 +81,18 @@ def search_github_examples(path: str = "", category: str = "examples") -> str:
                     req_file = urllib.request.Request(download_url, headers={'User-Agent': 'Python-urllib'})
                     with urllib.request.urlopen(req_file) as f_res:
                         return f_res.read().decode('utf-8')
-                return "Error: No se encontró la URL de descarga."
-            return "Respuesta inesperada de GitHub."
+                return "Error: No se encontró la URL de descarga del archivo."
+            else:
+                return "Respuesta inesperada de la API de GitHub."
                 
     except urllib.error.HTTPError as e:
         if e.code == 404:
-            return f"Error: No se encontró '{path}' en la categoría '{category}'."
-        return f"Error HTTP: {e.code}"
+            return f"Error: No se encontró la ruta '{path}' en los ejemplos de Jason."
+        if e.code == 403:
+            return "Error: Límite de peticiones a la API de GitHub excedido. Inténtalo más tarde."
+        return f"Error HTTP al acceder a GitHub: {e.code} - {e.reason}"
     except Exception as e:
-        return f"Error: {e}"
+        return f"Error al intentar acceder a los ejemplos: {e}"
 
 def test_mas_code(mas2j_code: str, agents_dict: dict) -> str:
     """
@@ -241,25 +234,6 @@ def save_mas_code(mas_name: str, mas2j_code: str = "", agents_dict: dict = None)
     except Exception as e:
         return f"ERROR inesperado al guardar: {e}"
 
-def calculate_fibonacci(n: int) -> str:
-    """
-    Calcula los primeros 'n' números de la secuencia de Fibonacci. 
-    Útil cuando el usuario pide lógica matemática compleja o ejemplos de algoritmos.
-    
-    Args:
-        n: La cantidad de números de la secuencia a generar.
-    """
-    if n <= 0:
-        return "Por favor, solicita un número mayor a 0."
-    
-    sequence = [0, 1]
-    while len(sequence) < n:
-        # Fórmula: $F_n = F_{n-1} + F_{n-2}$
-        sequence.append(sequence[-1] + sequence[-2])
-    
-    result = sequence[:n]
-    return f"Los primeros {n} números de Fibonacci son: {result}"
-
 # Configuramos el modelo, asumiendo la configuración habitual
 model = LiteLlm(
     #model="openai/gpt-oss-120b", 
@@ -284,36 +258,25 @@ root_agent = LlmAgent(
         "           nombre_agente_1;\n"
         "           nombre_agente_2 #3; /* Si necesitas instanciar 3 copias */\n"
         "   }\n"
-        "   REGLAS MAS2J: Usa 'MAS' en mayúsculas. NO pongas la extensión '.asl' en la lista de agentes. Acaba cada declaración de agente con punto y coma (;). El agente y el archivo de configuración NO deben empezar por mayúscula, siempre por minúscula.\n"
+        "   REGLAS MAS2J: Usa 'MAS' en mayúsculas. NO pongas la extensión '.asl' en la lista de agentes. Acaba cada declaración de agente con punto y coma (;).\n"
         "3. IMPORTANTE SINTAXIS AGENTSPEAK (.asl):\n"
-        "   - SEPARACIÓN DE ACCIONES: Las acciones dentro de un plan DEBEN estar separadas únicamente por punto y coma (;).\n"
-        "   - NUNCA uses comas (,) para separar acciones.\n" 
         "   - Las creencias y objetivos se deben declarar al principio del fichero, antes de los planes.\n"
-        "   - El primer plan SIEMPRE debe ser !start acabado en punto (.)\n"
         "   - Las variables DEBEN empezar con letra Mayúscula (ej. PosX). Los átomos y literales con minúscula (ej. mesa).\n"
-        "   - Para poder operar con un valor de una creencia hay que instanciarlo siempre primero en una variable.\n"
-        "   - El formato correcto es: +!meta <- accion1; accion2; accion3. ¡ATENCIÓN: TODOS los planes y creencias DEBEN terminar obligatoriamente con un PUNTO FINAL (.)!\n"
-        "   - ¡Evita el error 'No plan for event'! Debes asegurarte que ese error no pueda ocurrir.\n"
-        "   - Si quieres escribir comentarios la frase debe empezar por doble barra (//).\n"
-        "   - No uses el símbolo de porcentaje (%) para escribir comentarios.\n"
+        "   - Para poder operar con un valor de una creencia hay que intanciarlo siempre primero en una variable.\n"
+        "   - El formato estricto de un plan es: +!meta(Arg) : contexto <- accion1; accion2. ¡ATENCIÓN: TODOS los planes y creencias DEBEN terminar obligatoriamente con un PUNTO FINAL (.)!\n"
+        "   - ¡Evita el error 'No plan for event'! Debes añadir SIEMPRE un plan de contingencia genérico por si falla el contexto: +!meta(_) <- .print(\"Fallo en \", meta).\n"
         "   - Las internal actions nativas de Jason siempre llevan un punto delante (ej. .print(\"Hola\"); .wait(1000);) y recuerda cerrar el plan con PUNTO (.).\n"
         "   - Para iniciar la ejecución debes añadir una creencia o un objetivo inicial en el agente que inicie el sistema. Por ejemplo: DEBES poner \"!start.\" para poder ejecutar al inicio el plan \"+!start <- accion. \" \n"
-        "   - Si quieres escribir por pantalla varias variables no concatenes, usa varios print"
-        "4. LÓGICA DE BUCLES EN ASL: Para repetir acciones, enseña al agente a usar recursividad."
-        "Ejemplo de patrón:"
-        "+!loop(N) : N > 0 <- accion; !loop(N-1)."
-        "+!loop(0) <- .print(\"Fin\")."
-        "5. Si necesitas inspiración, utiliza search_github_examples(path, category). Puedes buscar en 'examples' para lo básico, 'applications' para sistemas complejos o 'kernel' si necesitas entender cómo funciona una directiva interna de Jason.\n"
-        "6. Si necesitas teoría técnica, tutoriales o sintaxis de Programación BDI, usa 'search_local_docs(query)'.\n"
-        "7. REGLA PROHIBITIVA ESTRICTA: ESTÁ TOTALMENTE PROHIBIDO DEVOLVER EL CÓDIGO FINAL DE JASON DIRECTAMENTE EN LA RESPUESTA DE TEXTO (MARKDOWN).\n"
-        "8. PASO 1 (INVESTIGACIÓN OBLIGATORIA): ANTES de proponer ningún código, ESTÁS OBLIGADO a llamar a la herramienta 'search_local_docs(query)'. Debes buscar en la teoría oficial cómo se implementa lo que el usuario pide.\n"
-        "9. PASO 2 (Verificación Práctica): Tras investigar y diseñar el código mentalmente, LLAMA SÍ O SÍ a 'test_mas_code(mas2j_code, agents_dict)' para probar si el sistema compila.\n"
-        "10. PASO 3 (Corrección Iterativa): Si 'test_mas_code' falla, lee la excepción devuelta en el log, modifica tu código y vuelve a ejecutar 'test_mas_code' (límite de 5 intentos).\n"
-        "11. PASO 4 (Guardado Final): Únicamente cuando la prueba no dé errores o agotes tus intentos, estás OBLIGADO a llamar a 'save_mas_code(mas_name, mas2j_code, agents_dict)' para persistir el proyecto.\n"
-        "12. PASO 5 (Notificar al usuario): Informa del éxito de la creación y da un breve resumen.\n"
-        "13. CATASTROFE DE SINTAXIS (MUY IMPORTANTE): Al usar las herramientas, SIEMPRE debes usar estrictamente el nombre técnico exacto ('search_github_examples', 'search_local_docs', 'test_mas_code', 'save_mas_code'). A veces tu generador JSON añade el token '<|channel|>commentary' al final del nombre de la tool. ESTO PROVOCA UN ERROR FATAL. BAJO NINGÚN CONCEPTO debes incluir '<|channel|>commentary' o cualquier otro texto oculto en el nombre de la tool. Limítate a generar el nombre en minúsculas y tal cual es."
-        "14. Si el usuario pide una secuencia matemática (como Fibonacci), primero usa la herramienta calculate_fibonacci para obtener los datos exactos. Después, usa esos datos para construir los planes en el archivo .asl."
+        "4. Si necesitas inspiración o código de ejemplo, utiliza la herramienta 'search_github_examples(path)'.\n"
+        "5. Si necesitas teoría técnica, tutoriales o sintaxis de Programación BDI, usa 'search_local_docs(query)'.\n"
+        "6. REGLA PROHIBITIVA ESTRICTA: ESTÁ TOTALMENTE PROHIBIDO DEVOLVER EL CÓDIGO FINAL DE JASON DIRECTAMENTE EN LA RESPUESTA DE TEXTO (MARKDOWN).\n"
+        "7. PASO 1 (INVESTIGACIÓN OBLIGATORIA): ANTES de proponer ningún código, ESTÁS OBLIGADO a llamar a la herramienta 'search_local_docs(query)'. Debes buscar en la teoría oficial cómo se implementa lo que el usuario pide.\n"
+        "8. PASO 2 (Verificación Práctica): Tras investigar y diseñar el código mentalmente, LLAMA SÍ O SÍ a 'test_mas_code(mas2j_code, agents_dict)' para probar si el sistema compila.\n"
+        "9. PASO 3 (Corrección Iterativa): Si 'test_mas_code' falla, lee la excepción devuelta en el log, modifica tu código y vuelve a ejecutar 'test_mas_code' (límite de 5 intentos).\n"
+        "10. PASO 4 (Guardado Final): Únicamente cuando la prueba no dé errores o agotes tus intentos, estás OBLIGADO a llamar a 'save_mas_code(mas_name, mas2j_code, agents_dict)' para persistir el proyecto.\n"
+        "11. PASO 5 (Notificar al usuario): Informa del éxito de la creación y da un breve resumen.\n"
+        "12. CATASTROFE DE SINTAXIS (MUY IMPORTANTE): Al usar las herramientas, SIEMPRE debes usar estrictamente el nombre técnico exacto ('search_github_examples', 'search_local_docs', 'test_mas_code', 'save_mas_code'). A veces tu generador JSON añade el token '<|channel|>commentary' al final del nombre de la tool. ESTO PROVOCA UN ERROR FATAL. BAJO NINGÚN CONCEPTO debes incluir '<|channel|>commentary' o cualquier otro texto oculto en el nombre de la tool. Limítate a generar el nombre en minúsculas y tal cual es."
     ),
-    tools=[search_github_examples, rag.search_local_docs, test_mas_code, save_mas_code, calculate_fibonacci]
+    tools=[search_github_examples, rag.search_local_docs, test_mas_code, save_mas_code]
 )
 
