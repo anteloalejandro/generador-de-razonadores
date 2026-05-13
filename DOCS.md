@@ -4,7 +4,7 @@ Lo usamos para apuntar los problemas que vamos teniendo con el agente, para sabe
 
 # PROBLEMAS
 
-## El agente no usa o no sabe usar search_github_examples
+## El agente no usa o no sabe usar `search_github_examples`
 
 `search_github_examples` no funciona correctamente. Tenemos dos opciones:
 - Tratar de enseñar a la IA como funciona.
@@ -29,3 +29,13 @@ El agente de IA se equivoca muy a menudo con qué símbolos se usan para qué co
 - Los elementos del cuerpo de un plan deben ir separados por `;`, pero pone `,`.
   - Correcto: `.print(A); !fib_seq(Cnt + 1, B, A + B).`
   - Incorrecto: `.print(A), !fib_seq(Cnt + 1, B, A + B).`
+
+## La salida de `search_local_docs` se corta demasiado pronto
+
+`search_local_docs` corta su salida tan pronto que no llega a alcanzar apenas contenido relevante.
+
+## `test_mas_code` siempre falla con timeout.
+
+Aunque el código funcione, `test_mas_code` siempre falla con timeout.
+
+Cuando el código no funciona por un error sintáctico debería mostrar dónde está el error sintáctico, pero en su lugar falla por timeout.
