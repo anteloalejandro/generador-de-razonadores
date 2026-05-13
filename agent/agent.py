@@ -309,12 +309,12 @@ coder = LlmAgent(
     instruction=get_instructions("coder.md")
 )
 
-validator = LoopAgent(
-    name="Validator",
-    description="Agente validador experto en el lenguaje Jason. Comprueba si el código Jason sigue todas las reglas sintácticas y semánticas",
-    sub_agents=[coder],
-    max_iterations=5
-)
+# validator = LoopAgent(
+#     name="Validator",
+#     description="Agente validador experto en el lenguaje Jason. Comprueba si el código Jason sigue todas las reglas sintácticas y semánticas",
+#     sub_agents=[coder],
+#     max_iterations=5
+# )
 
 tester = LlmAgent(
     name="Tester",
@@ -327,8 +327,12 @@ tester = LlmAgent(
 
 refiner = LoopAgent(
     name="Refiner",
-    description="Agente refinador. Repite el proceso de desarrollo hasta que el resultado del sistema Multi-Agente es satisfactorio",
-    sub_agents=[aggregator, validator, tester],
+    description=(
+        "Agente refinador. "
+        "Repite el proceso de desarrollo hasta que el resultado del sistema Multi-Agente válido de acuerdo a las especificaciones del usuario. "
+        "NO SE DEBE REFINAR SI `agent_output` ES VÁLIDO."
+    ),
+    sub_agents=[aggregator, coder, tester],
     max_iterations=10
 )
 

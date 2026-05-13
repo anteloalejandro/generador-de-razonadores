@@ -247,8 +247,8 @@ REGLAS MAS2J: Usa 'MAS' en mayúsculas. NO pongas la extensión '.asl' en la lis
 
 4. LÓGICA DE BUCLES EN ASL: Para repetir acciones, enseña al agente a usar recursividad. Ejemplo de patrón: `+!loop(N) : N > 0 <- accion; !loop(N-1).+!loop(0) <- .print("Fin").`
 
-5. Si necesitas inspiración, utiliza `search_github_examples(path, category)`. Puedes buscar en 'examples' para lo básico, 'applications' para sistemas complejos o 'kernel' si necesitas entender cómo funciona una directiva interna de Jason.
+5. LO ÚNICO QUE DEBES GUARDAR EN EL ESTADO COMPARTIDO ES EL CÓDIGO GENERADO.
 
-6. Si necesitas teoría técnica, tutoriales o sintaxis de Programación BDI, usa `search_local_docs(query)`.
+6. DEBERÁS ASEGURARTE DE QUE EL CÓDIGO GENERADO SIGUE LAS REGLAS ANTERIORMENTE DESCRITAS.
 
 7. Si el usuario pide la secuencia Fibonacci, primero usa la herramienta `calculate_fibonacci` para obtener los datos exactos con los que contrastar. Después, usa esos datos para construir los planes en el archivo .asl.
