@@ -16,7 +16,7 @@ cwd = os.path.dirname(os.path.abspath(__file__))
 OUTPUT_DIR = Path("output")
 OUTPUT_DIR.mkdir(exist_ok=True)
 
-MAX_RETRIES = 5
+MAX_RETRIES = 10
 current_retries = 0
 best_mas_state = {}
 best_error_count = float('inf')
@@ -106,7 +106,7 @@ def test_mas_code(mas2j_code: str, agents_dict: dict) -> str:
     """
     Guarda y ejecuta el código en un directorio temporal para probar el sistema Multi-Agente usando jason.
     NO guarda los archivos definitivamente, solo devuelve la salida para que verifiques si funciona.
-    Tiene un límite de 5 intentos por sesión.
+    Tiene un límite de 10 intentos por sesión.
     
     Args:
         mas2j_code: El contenido completo del archivo de configuración .mas2j.
