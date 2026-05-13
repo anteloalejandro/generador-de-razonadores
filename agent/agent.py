@@ -6,7 +6,7 @@ import urllib.error
 import json
 import os
 from pathlib import Path
-from google.adk.agents import LlmAgent
+from google.adk.agents import LlmAgent, LoopAgent, ParallelAgent, SequentialAgent
 from google.adk.models.lite_llm import LiteLlm
 from . import rag   
 #from rag import consultar_documentacion 
@@ -273,11 +273,76 @@ model = LiteLlm(
     api_key="sk-LFXs1kjaSxtEDgOMlPUOpA"
 )
 
-root_agent = LlmAgent(
-    name="BDI_Developer",
+web_searcher = LlmAgent(
+    name="Web_Searcher",
+    description="Agente buscador de ejemplos de lenguaje Jason",
     model=model,
-    description="Agente experto en desarrollador proyectos Multi-Agente BDI en Jason",
-    instruction=open(Path(cwd, "instructions.md"), encoding="utf-8").read(),
-    tools=[search_github_examples, rag.search_local_docs, test_mas_code, save_mas_code, calculate_fibonacci]
+    tools=[search_github_examples],
+    output_key="examples",
 )
 
+doc_searcher = LlmAgent(
+    name="Doc_Agent",
+    description="Agente buscador de documentación local sobre el lenguaje Jason",
+    model=model,
+    tools=[rag.search_local_docs],
+    output_key="documentation",
+)
+
+searcher = ParallelAgent(
+    name="Searcher",
+    description="Agente buscador de información sobre el lenguaje Jason en diversas fuentes",
+    sub_agents = [web_searcher, doc_searcher]
+)
+
+coder = LlmAgent(
+    name="Coder",
+    description="Agente programador experto en sistemas Multi-Agente en Jason",
+    model=model,
+    tools=[calculate_fibonacci],
+    output_key="agent_code",
+)
+
+validator = LoopAgent(
+    name="Validator",
+    description="Agente validador experto en el lenguaje Jason. Comprueba si el código Jason sigue todas las reglas sintácticas y semánticas",
+    sub_agents=[coder],
+    max_iterations=5
+)
+
+tester = LlmAgent(
+    name="Tester",
+    description="Agente testeador. Ejecuta sistemas Multi-Agente y comprueba si el funcionamiento es correcto",
+    model=model,
+    tools=[test_mas_code],
+    output_key="agent_output"
+)
+
+refiner = LoopAgent(
+    name="Refiner",
+    description="Agente refinador. Repite el proceso de desarrollo hasta que el resultado del sistema Multi-Agente es satisfactorio",
+    sub_agents=[searcher, coder, tester],
+    max_iterations=10
+)
+
+saver = LlmAgent(
+    name="Saver",
+    description="Su único trabajo es guardar el código Multi-Agente generado",
+    model=model,
+    tools=[save_mas_code],
+    output_key="save_info"
+)
+
+root_agent = SequentialAgent(
+    name="BDI_Developer",
+    description="Agente experto en desarrollador proyectos Multi-Agente BDI en Jason",
+    sub_agents=[refiner, saver]
+)
+
+# root_agent = LlmAgent(
+#     name="BDI_Developer",
+#     model=model,
+#     description="Agente experto en desarrollador proyectos Multi-Agente BDI en Jason",
+#     instruction=open(Path(cwd, "instructions.md"), encoding="utf-8").read(),
+#     tools=[search_github_examples, rag.search_local_docs, test_mas_code, save_mas_code, calculate_fibonacci],
+# )

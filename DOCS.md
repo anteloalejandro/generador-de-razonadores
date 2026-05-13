@@ -63,3 +63,13 @@ Cuando el agente genera sin querer un bucle infinito en el que muestra salida, p
 ### Solución
 
 Lo solucionamos limitando el tamaño de la salida a unos 10000 caracteres, que debería producir salidas por debajo del limite de 130000 tokens del modelo.
+
+# Arquitectura multiagente
+
+```
+               ╭── Web_Searcher ──╮
+╭── Searcher ──┤                  ├── Coder ─── Validator ─── Tester ──╮
+│              ╰── Doc_Searcher ──╯                                    │
+│                                                                      │
+╰──────────────────────────────────────────────────────────────────────╯
+```
