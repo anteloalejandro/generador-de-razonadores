@@ -189,6 +189,9 @@ def test_mas_code(mas2j_code: str, agents_dict: dict) -> str:
         if hasattr(e, 'stdout') and e.stdout:
             stdout_str = e.stdout.decode('utf-8') if isinstance(e.stdout, bytes) else e.stdout
             output += f"--- STDOUT (parcial) ---\n{stdout_str}\n"
+        if hasattr(e, 'stderr') and e.stderr:
+            stderr_str = e.stderr.decode('utf-8') if isinstance(e.stderr, bytes) else e.stderr
+            output += f"--- STDERR (parcial) ---\n{stderr_str}\n"
         return output
         
     except FileNotFoundError:
