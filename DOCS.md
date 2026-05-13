@@ -2,6 +2,18 @@
 
 Lo usamos para apuntar los problemas que vamos teniendo con el agente, para saber qué hacer luego en la memoria.
 
+# Arquitectura multiagente
+
+La estructura del sistema multiagente, viendo sólo las hojas del árbol, es algo así:
+
+```
+   ╭── Web_Searcher ──╮
+╭──┤                  ├── Coder ─── Validator ─── Tester ──┬── Saver
+│  ╰── Doc_Searcher ──╯                                    │
+│                                                          │
+╰──────────────────────────────────────────────────────────╯
+```
+
 # PROBLEMAS
 
 ## El agente no usa o no sabe usar `search_github_examples`
@@ -64,14 +76,6 @@ Cuando el agente genera sin querer un bucle infinito en el que muestra salida, p
 
 Lo solucionamos limitando el tamaño de la salida a unos 10000 caracteres, que debería producir salidas por debajo del limite de 130000 tokens del modelo.
 
-# Arquitectura multiagente
+## El sistema multiagente siempre repite el proceso de desarrollo
 
-La estructura del sistema multiagente, viendo sólo las hojas del árbol, es algo así:
-
-```
-   ╭── Web_Searcher ──╮
-╭──┤                  ├── Coder ─── Validator ─── Tester ──┬── Saver
-│  ╰── Doc_Searcher ──╯                                    │
-│                                                          │
-╰──────────────────────────────────────────────────────────╯
-```
+Aunque el resultado generado devuelva código válido que hace lo que pide el usuario, vuelven a iterar desde el principio.
