@@ -276,7 +276,7 @@ root_agent = LlmAgent(
     name="BDI_Developer",
     model=model,
     description="Agente experto en desarrollador proyectos Multi-Agente BDI en Jason",
-    instruction=open(Path(cwd,"instructions.md")).read(),
+    instruction=open(Path(cwd, "instructions.md"), encoding="utf-8").read(),
     tools=[search_github_examples, rag.search_local_docs, test_mas_code, save_mas_code, calculate_fibonacci]
 )
 
