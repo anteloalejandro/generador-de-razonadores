@@ -243,8 +243,7 @@ REGLAS MAS2J: Usa 'MAS' en mayúsculas. NO pongas la extensión '.asl' en la lis
    - Si quieres escribir comentarios la frase debe empezar por doble barra (`//`).
    - No uses el símbolo de porcentaje (`%`) para escribir comentarios.
    - Las internal actions nativas de Jason siempre llevan un punto delante (ej. `.print("Hola"); .wait(1000).`) y recuerda cerrar el plan con PUNTO (`.`).
-   - Para iniciar la ejecución debes añadir una creencia o un objetivo inicial en el agente que inicie el sistema. Por ejemplo: DEBES poner `!start.` para poder ejecutar al inicio el plan `+!start <- accion.`
-   - Si quieres escribir por pantalla varias variables no concatenes, usa varios `print`
+   - Para iniciar la ejecución debes añadir una creencia o un objetivo inicial en el agente que inicie el sistema. Por ejemplo: DEBES poner `!start.` para poder ejecutar al inicio el plan `+!start <- accion.`. **Si no sale nada relevante por `stdout`, probablemente falte la creencia inicial.**
 4. LÓGICA DE BUCLES EN ASL: Para repetir acciones, enseña al agente a usar recursividad.Ejemplo de patrón: `+!loop(N) : N > 0 <- accion; !loop(N-1).+!loop(0) <- .print("Fin").`
 
 5. Si necesitas inspiración, utiliza `search_github_examples(path, category)`. Puedes buscar en 'examples' para lo básico, 'applications' para sistemas complejos o 'kernel' si necesitas entender cómo funciona una directiva interna de Jason.
