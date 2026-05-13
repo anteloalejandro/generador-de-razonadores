@@ -30,6 +30,10 @@ El agente de IA se equivoca muy a menudo con qué símbolos se usan para qué co
   - Correcto: `.print(A); !fib_seq(Cnt + 1, B, A + B).`
   - Incorrecto: `.print(A), !fib_seq(Cnt + 1, B, A + B).`
 
+### Solución
+
+Añadir la cheatsheet directamente en las instrucciones y arreglar `test_mas_code` para que también muestre `stderr`.
+
 ## La salida de `search_local_docs` se corta demasiado pronto
 
 `search_local_docs` corta su salida tan pronto que no llega a alcanzar apenas contenido relevante.
@@ -39,3 +43,15 @@ El agente de IA se equivoca muy a menudo con qué símbolos se usan para qué co
 Aunque el código funcione, `test_mas_code` siempre falla con timeout.
 
 Cuando el código no funciona por un error sintáctico debería mostrar dónde está el error sintáctico, pero en su lugar falla por timeout.
+
+### Solución
+
+Se ha añadido el siguiente extracto de código a `test_mas_code`, dentro del `except subprocess.TimeoutExpired` para mostrar el error estándar en vez de sólamente la salida estándar.
+
+```python
+if hasattr(e, 'stderr') and e.stderr:
+    stderr_str = e.stderr.decode('utf-8') if isinstance(e.stderr, bytes) else e.stderr
+    output += f"--- STDERR (parcial) ---\n{stderr_str}\n"
+```
+
+Resulta que tanto la salida de los errores como la salida de los agentes funcionales van por `stderr`.
