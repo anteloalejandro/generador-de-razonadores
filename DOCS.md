@@ -13,3 +13,7 @@ Lo usamos para apuntar los problemas que vamos teniendo con el agente, para sabe
 ## El agente se olvida de poner la creencia inicial
 
 El agente no pone la creencia inicial que hace que inicie el programa (ej. `!start.`).
+
+## La tool `test_mas_code` no funciona prácticamente nunca
+
+No falla necesariamente, pero da timeout y el agente de IA se ralla.
