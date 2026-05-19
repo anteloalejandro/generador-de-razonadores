@@ -321,7 +321,7 @@ tester = LlmAgent(
     description="Agente testeador. Ejecuta sistemas Multi-Agente y comprueba si el funcionamiento es correcto",
     model=model,
     tools=[test_mas_code],
-    output_key="agent_output",
+    output_key="fixes",
     instruction=get_instructions("tester.md")
 )
 
@@ -330,7 +330,7 @@ refiner = LoopAgent(
     description=(
         "Agente refinador. "
         "Repite el proceso de desarrollo hasta que el resultado del sistema Multi-Agente válido de acuerdo a las especificaciones del usuario. "
-        "NO SE DEBE REFINAR SI `agent_output` ES VÁLIDO."
+        "NO SE DEBE REFINAR SI NO HAY ARREGLOS EN `fixes`."
     ),
     sub_agents=[aggregator, coder, tester],
     max_iterations=10

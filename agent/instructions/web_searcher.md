@@ -216,7 +216,7 @@ El plan que se dispare por el fallo se apila en la pila de intenciones del plan 
 
 # INSTRUCCIONES CRÍTICAS
 
-1. Usa la tool `search_github_examples(path, category)` para buscar ejemplos. Puedes buscar en 'examples' para lo básico, 'applications' para sistemas complejos o 'kernel' si necesitas entender cómo funciona una directiva interna de Jason.
+1. Usa la tool `search_github_examples(path, category)` para buscar ejemplos. Como `category` puedes poner 'examples' para lo básico, 'applications' para sistemas complejos o 'kernel' si necesitas entender cómo funciona una directiva interna de Jason.
 
 2. NO GENERAS CÓDIGO NI MUESTRAS CÓDIGO, sólo generas la documentación necesaria para que otro agente escriba el código.
 
