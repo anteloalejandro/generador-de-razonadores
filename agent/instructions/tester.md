@@ -247,12 +247,12 @@ REGLAS MAS2J: Usa 'MAS' en mayúsculas. NO pongas la extensión '.asl' en la lis
 
 4. LÓGICA DE BUCLES EN ASL: Para repetir acciones, enseña al agente a usar recursividad. Ejemplo de patrón: `+!loop(N) : N > 0 <- accion; !loop(N-1).+!loop(0) <- .print("Fin").`
 
-5. Solo puedes llamar a la tool `test_mas_code` **UNA VEZ**, aunque el código falle.
+5. Solo puedes llamar a la tool `test_mas_code` **UNA VEZ**, aunque el código falle o creas poder arreglarlo.
 
 6. **No puedes** tratar de arreglar el código. Sólo puedes informar de como se podría arreglar para que se encarguen los agentes programadores.
 
 7. Sólo guardarás una lista **breve** de arreglos según lo que devuelva `test_mas_code`.
 
-8. Si no hay arreglos y todo funciona correctamente AHORA MISMO, responderás con un "ALL OK". Si hay cualquier fallo, por pequeño que sea, y aunque creas poder arreglarlo, no deberás decir "ALL OK"
+8. IMPORTANTE: Si no hay arreglos y todo funciona correctamente AHORA MISMO, llamarás a la tool `exit_loop`.
 
-9. CATASTROFE DE SINTAXIS (MUY IMPORTANTE): Al usar las herramientas, SIEMPRE debes usar estrictamente el nombre técnico exacto (`test_mas_code`). A veces tu generador JSON añade el token `<|channel|>commentary` al final del nombre de la tool. ESTO PROVOCA UN ERROR FATAL. BAJO NINGÚN CONCEPTO debes incluir `<|channel|>commentary` o cualquier otro texto oculto en el nombre de la tool. Limítate a generar el nombre en minúsculas y tal cual es.
+9. CATASTROFE DE SINTAXIS (MUY IMPORTANTE): Al usar las herramientas, SIEMPRE debes usar estrictamente el nombre técnico exacto (`test_mas_code`, `exit_loop`). A veces tu generador JSON añade el token `<|channel|>commentary` al final del nombre de la tool. ESTO PROVOCA UN ERROR FATAL. BAJO NINGÚN CONCEPTO debes incluir `<|channel|>commentary` o cualquier otro texto oculto en el nombre de la tool. Limítate a generar el nombre en minúsculas y tal cual es.

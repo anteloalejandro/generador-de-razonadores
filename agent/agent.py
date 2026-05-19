@@ -7,10 +7,11 @@ import json
 import os
 from pathlib import Path
 from google.adk.agents import LlmAgent, LoopAgent, ParallelAgent, SequentialAgent
+from google.adk.agents.callback_context import CallbackContext
 from google.adk.models.lite_llm import LiteLlm
+from google.adk.tools.tool_context import ToolContext
 from . import rag   
 #from rag import consultar_documentacion 
-
 
 cwd = os.path.dirname(os.path.abspath(__file__))
 OUTPUT_DIR = Path("output")
@@ -265,6 +266,16 @@ def calculate_fibonacci(n: int) -> str:
     result = sequence[:n]
     return f"Los primeros {n} números de Fibonacci son: {result}"
 
+def get_instructions(filename: str):
+    return open(Path(cwd, "instructions", filename), encoding="utf-8").read()
+
+def exit_loop(tool_context: ToolContext):
+    print(f"  [Tool Call] exit_loop triggered by {tool_context.agent_name}")
+    tool_context.actions.escalate = True
+    tool_context.actions.skip_summarization = True
+    # Return empty dict as tools should typically return JSON-serializable output
+    return {}
+
 # Configuramos el modelo, asumiendo la configuración habitual
 model = LiteLlm(
     #model="openai/gpt-oss-120b", 
@@ -272,9 +283,6 @@ model = LiteLlm(
     api_base="https://api.poligpt.upv.es/",
     api_key="sk-LFXs1kjaSxtEDgOMlPUOpA"
 )
-
-def get_instructions(filename: str):
-    return open(Path(cwd, "instructions", filename), encoding="utf-8").read()
 
 web_searcher = LlmAgent(
     name="Web_Searcher",
@@ -320,7 +328,7 @@ tester = LlmAgent(
     name="Tester",
     description="Agente testeador. Ejecuta sistemas Multi-Agente y comprueba si el funcionamiento es correcto",
     model=model,
-    tools=[test_mas_code],
+    tools=[test_mas_code, exit_loop],
     output_key="fixes",
     instruction=get_instructions("tester.md")
 )
@@ -329,8 +337,7 @@ refiner = LoopAgent(
     name="Refiner",
     description=(
         "Agente refinador. "
-        "Repite el proceso de desarrollo hasta que el resultado del sistema Multi-Agente válido de acuerdo a las especificaciones del usuario. "
-        "NO SE DEBE REFINAR SI NO HAY ARREGLOS EN `fixes`."
+        "Repite el proceso de desarrollo hasta que el resultado del sistema Multi-Agente válido de acuerdo a las especificaciones del usuario."
     ),
     sub_agents=[aggregator, coder, tester],
     max_iterations=10
