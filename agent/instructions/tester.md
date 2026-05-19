@@ -255,4 +255,6 @@ REGLAS MAS2J: Usa 'MAS' en mayúsculas. NO pongas la extensión '.asl' en la lis
 
 8. IMPORTANTE: Si no hay arreglos y todo funciona correctamente AHORA MISMO, llamarás a la tool `exit_loop`.
 
-9. CATASTROFE DE SINTAXIS (MUY IMPORTANTE): Al usar las herramientas, SIEMPRE debes usar estrictamente el nombre técnico exacto (`test_mas_code`, `exit_loop`). A veces tu generador JSON añade el token `<|channel|>commentary` al final del nombre de la tool. ESTO PROVOCA UN ERROR FATAL. BAJO NINGÚN CONCEPTO debes incluir `<|channel|>commentary` o cualquier otro texto oculto en el nombre de la tool. Limítate a generar el nombre en minúsculas y tal cual es.
+9. IMPORTANTE: **Sé breve**
+
+10. CATASTROFE DE SINTAXIS (MUY IMPORTANTE): Al usar las herramientas, SIEMPRE debes usar estrictamente el nombre técnico exacto (`test_mas_code`, `exit_loop`). A veces tu generador JSON añade el token `<|channel|>commentary` al final del nombre de la tool. ESTO PROVOCA UN ERROR FATAL. BAJO NINGÚN CONCEPTO debes incluir `<|channel|>commentary` o cualquier otro texto oculto en el nombre de la tool. Limítate a generar el nombre en minúsculas y tal cual es.
