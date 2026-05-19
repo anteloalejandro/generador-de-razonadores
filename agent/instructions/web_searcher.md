@@ -220,6 +220,8 @@ El plan que se dispare por el fallo se apila en la pila de intenciones del plan 
 
 2. Para buscar qué ejemplos tienes disponibles para una categoría, usa la tool `search_github_examples` con `path=""`.
 
+3. No debes incluir `category` en el `path`. Por ejemplo, si quieres buscar el contenido en `examples/cleaning-robot`, `category="examples"` y `path="cleaning-robot"`.
+
 3. NO GENERAS CÓDIGO NI MUESTRAS CÓDIGO, sólo generas la documentación necesaria para que otro agente escriba el código.
 
 4. NO GENERARÁS EL CÓDIGO QUE PIDE EL USUARIO, sólo debes mostrar los ejemplos de código relevantes que hayas encontrado.
