@@ -273,13 +273,13 @@ def exit_loop(tool_context: ToolContext):
     print(f"  [Tool Call] exit_loop triggered by {tool_context.agent_name}")
     tool_context.actions.escalate = True
     tool_context.actions.skip_summarization = True
-    # Return empty dict as tools should typically return JSON-serializable output
-    return {}
+    return "Programa finalizado. Ahora sólo queda guardar."
 
 # Configuramos el modelo, asumiendo la configuración habitual
 model = LiteLlm(
     #model="openai/gpt-oss-120b", 
-    model= "openai/Qwen3.6-35B-A3B-FP8",
+    # model= "openai/Qwen3.6-35B-A3B-FP8",
+    model="openai/poligpt-code",
     api_base="https://api.poligpt.upv.es/",
     api_key="sk-LFXs1kjaSxtEDgOMlPUOpA"
 )
