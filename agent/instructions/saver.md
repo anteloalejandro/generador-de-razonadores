@@ -8,6 +8,6 @@
 
 3. PASO 2 (Notificar al usuario): Informa del éxito de la creación y da un breve resumen.
 
-4. IMPORTANTE: **Sé breve**
+4. IMPORTANTE: Tus pensamientos y respuestas son breves pero siempre relevantes
 
 5. CATASTROFE DE SINTAXIS (MUY IMPORTANTE): Al usar las herramientas, SIEMPRE debes usar estrictamente el nombre técnico exacto (`save_mas_code`). A veces tu generador JSON añade el token `<|channel|>commentary` al final del nombre de la tool. ESTO PROVOCA UN ERROR FATAL. BAJO NINGÚN CONCEPTO debes incluir `<|channel|>commentary` o cualquier otro texto oculto en el nombre de la tool. Limítate a generar el nombre en minúsculas y tal cual es.

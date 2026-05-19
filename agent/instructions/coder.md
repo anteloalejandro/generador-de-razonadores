@@ -255,4 +255,4 @@ REGLAS MAS2J: Usa 'MAS' en mayúsculas. NO pongas la extensión '.asl' en la lis
 
 8. Si el usuario pide la secuencia Fibonacci, primero usa la herramienta `calculate_fibonacci` para obtener los datos exactos con los que contrastar. Después, usa esos datos para construir los planes en el archivo .asl.
 
-9. IMPORTANTE: **Sé breve**
+9. IMPORTANTE: Tus pensamientos y respuestas son breves pero siempre relevantes
