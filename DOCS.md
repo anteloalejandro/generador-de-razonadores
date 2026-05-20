@@ -22,13 +22,24 @@ La estructura del sistema multiagente, viendo sólo las hojas del árbol, es alg
 - Tratar de enseñar a la IA como funciona.
 - Reescribirlo para que sea más fácil de utilizar y usar agentes en secuencia.
 
+### Solución
+
+Parte de la solución radica en que ahora Web_Searcher se encarga en exclusiva de usar `search_github_examples`.
+
+También se ha enseñado a este agente como debe usarlo, principalmente:
+- Siendo más explícitos con qué parámetro sirve para qué.
+- Especificando los posibles valores del parámetro `category`.
+- Aclarando que no debe poner lo que haya en `category` al principio del `path` e incluyendo ejemplos.
+
 ## El agente se olvida de poner la creencia inicial
 
 El agente no pone la creencia inicial que hace que inicie el programa (ej. `!start.`).
 
-## La tool `test_mas_code` no funciona prácticamente nunca
+### Solución
 
-No falla necesariamente, pero da timeout y el agente de IA se ralla.
+Aclarar como funciona JASON y arreglar algunas confusiones con la terminología en las instrucciones arregla mayoritariamente el problema.
+
+Con eso y arreglando `test_mas_code`, el problema ha (prácticamente) desaparecido.
 
 ## Confusiones con los símbolos
 
@@ -79,3 +90,25 @@ Lo solucionamos limitando el tamaño de la salida a unos 10000 caracteres, que d
 ## El sistema multiagente siempre repite el proceso de desarrollo
 
 Aunque el resultado generado devuelva código válido que hace lo que pide el usuario, vuelven a iterar desde el principio.
+
+### Solución
+
+La solución consiste en añadir una tool al agente Tester que detenga la ejecución del bucle, tal y como se describe en la documentación del `LoopAgent`.
+
+```python
+def exit_loop(tool_context: ToolContext):
+    # ...
+    tool_context.actions.escalate = True
+    tool_context.actions.skip_summarization = True
+    # ...
+```
+
+La tool es una función que recibe un `tool_context` que permite modificar el estado de la _pipeline_ de forma que el LoopAgent delegue sobre su padre, el `root_agent`, que pasará a ejecutar el agente `saver`
+
+Obviamente, también se ha tenido que enseñar al agente Tester cuándo debe usar esta tool.
+
+## El agente tarda mucho en responder
+
+Parte del problema parece ser que las respuestas se alargan excesivamente.
+
+Se ha intentado poner en las instrucciones de cada agente que tanto sus pensamientos como respuestas deben ser breves, pero sólo funciona al principio.
