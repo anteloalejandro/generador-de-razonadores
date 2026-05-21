@@ -8,10 +8,10 @@ La estructura del sistema multiagente, viendo sólo las hojas del árbol, es alg
 
 ```
    ╭── Web_Searcher ──╮
-╭──┤                  ├── Coder ─── Validator ─── Tester ──┬── Saver
-│  ╰── Doc_Searcher ──╯                                    │
-│                                                          │
-╰──────────────────────────────────────────────────────────╯
+╭──┤                  ├── Coder ─── Tester ──┬── Saver
+│  ╰── Doc_Searcher ──╯                      │
+│                                            │
+╰────────────────────────────────────────────╯
 ```
 
 # PROBLEMAS
@@ -29,7 +29,12 @@ Parte de la solución radica en que ahora Web_Searcher se encarga en exclusiva d
 También se ha enseñado a este agente como debe usarlo, principalmente:
 - Siendo más explícitos con qué parámetro sirve para qué.
 - Especificando los posibles valores del parámetro `category`.
-- Aclarando que no debe poner lo que haya en `category` al principio del `path` e incluyendo ejemplos.
+
+Finalmente, como el modelo de IA pone el contenido de `category` también al principio de `path`, se ha modificado `search_github_examples` para eliminar esa parte del `path`.
+
+```python
+path = re.sub(rf"^{category}\/", "", path)
+```
 
 ## El agente se olvida de poner la creencia inicial
 

@@ -1,4 +1,5 @@
 import sys
+import re
 import subprocess
 import shutil
 import urllib.request
@@ -66,6 +67,10 @@ def search_github_examples(path: str = "", category: str = "examples") -> str:
             - 'applications': Proyectos y aplicaciones reales de la comunidad.
             - 'kernel': Código interno de Jason (útil para entender el funcionamiento avanzado).
     """
+
+    # Elimina del principio de `path` el contenido de `category`, que a veces la IA se confunde.
+    path = re.sub(rf"^{category}\/", "", path)
+
     # Mapeo de categorías a URLs de la API de GitHub
     SOURCES = {
         "examples": "https://api.github.com/repos/jason-lang/jason/contents/examples",
