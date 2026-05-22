@@ -8,7 +8,7 @@ La estructura del sistema multiagente, viendo sólo las hojas del árbol, es alg
 
 ```
    ╭── Web_Searcher ──╮
-╭──┤                  ├── Coder ─── Tester ──┬── Saver
+╭──┤                  ├── Coder ─── Tester ──┬── End
 │  ╰── Doc_Searcher ──╯                      │
 │                                            │
 ╰────────────────────────────────────────────╯
@@ -117,3 +117,13 @@ Obviamente, también se ha tenido que enseñar al agente Tester cuándo debe usa
 Parte del problema parece ser que las respuestas se alargan excesivamente.
 
 Se ha intentado poner en las instrucciones de cada agente que tanto sus pensamientos como respuestas deben ser breves, pero sólo funciona al principio.
+
+## El agente saver nunca recibe código
+
+Al asignar tool_context.actions.escalate = True, la librería google.adk entiende que ha ocurrido un evento crítico (o una señal de parada total) y aborta la ejecución de todo el árbol de agentes hacia arriba.
+
+Esto significa que refiner se detiene, pero en lugar de pasar el testigo al siguiente agente de la lista en el SequentialAgent (saver), el pipeline principal finaliza por completo. El agente Saver nunca llega a recibir su turno de ejecución, y por ende, jamás lee su archivo saver.md ni invoca a save_mas_code.
+
+### Solución
+
+Lo que hemos hecho ha sido que el propio agente tester sea el encargado de guardar el código, por lo que saver ya no es necesario.

@@ -255,10 +255,10 @@ REGLAS MAS2J: Usa 'MAS' en mayúsculas. NO pongas la extensión '.asl' en la lis
 
 8. PASO 1, TESTEAR EL CÓDIGO: llama a `test_mas_code` y evalúa si el resultado coincide con lo esperado.
 
-9. PASO 2, SALIR DE BUCLE: si y sólo si todo funciona correctamente AHORA MISMO, llamaras a `exit_loop` para finalizar el desarrollo.
+9. PASO 2, SALIR DE BUCLE Y GUARDAR: si y sólo si todo funciona correctamente AHORA MISMO, llamarás a exit_loop(mas_name) pasando como argumento el nombre del proyecto solicitado por el usuario para proceder al guardado automático y finalizar el desarrollo.
 
 10. Bajo NINGÚN CONCEPTO puedes salir del bucle de desarrollo si aún hay problemas en el código.
 
 11. IMPORTANTE: Tus pensamientos y respuestas son breves y concisas.
 
-12. CATASTROFE DE SINTAXIS (MUY IMPORTANTE): Al usar las herramientas, SIEMPRE debes usar estrictamente el nombre técnico exacto (`test_mas_code`, `exit_loop`). A veces tu generador JSON añade el token `<|channel|>commentary` al final del nombre de la tool. ESTO PROVOCA UN ERROR FATAL. BAJO NINGÚN CONCEPTO debes incluir `<|channel|>commentary` o cualquier otro texto oculto en el nombre de la tool. Limítate a generar el nombre en minúsculas y tal cual es.
+12. CATASTROFE DE SINTAXIS (MUY IMPORTANTE): Al usar las herramientas, SIEMPRE debes usar estrictamente el nombre técnico exacto (`test_mas_code`, `exit_loop`). Recuerda que `exit_loop` requiere obligatoriamente el parámetro `mas_name` con el nombre del proyecto en minúsculas. BAJO NINGÚN CONCEPTO debes incluir `<|channel|>commentary` o cualquier otro texto oculto en el nombre de la tool.

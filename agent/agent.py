@@ -274,11 +274,31 @@ def calculate_fibonacci(n: int) -> str:
 def get_instructions(filename: str):
     return open(Path(cwd, "instructions", filename), encoding="utf-8").read()
 
-def exit_loop(tool_context: ToolContext):
+#def exit_loop(tool_context: ToolContext):
+#    print(f"  [Tool Call] exit_loop triggered by {tool_context.agent_name}")
+#    tool_context.actions.escalate = True
+#    tool_context.actions.skip_summarization = True
+#    return "Programa finalizado. Ahora sólo queda guardar."
+
+def exit_loop(mas_name: str, tool_context: ToolContext):
+    """
+    Finaliza el bucle de pruebas y guarda automáticamente el proyecto en el disco.
+    
+    Args:
+        mas_name: Nombre que se le dará a la subcarpeta y al archivo .mas2j.
+    """
     print(f"  [Tool Call] exit_loop triggered by {tool_context.agent_name}")
+    
+    # 1. Llamamos a la función de guardado usando las variables globales 
+    # que capturaron el mejor estado en 'test_mas_code'
+    resultado_guardado = save_mas_code(mas_name=mas_name)
+    print(f"  [Auto-Save] {resultado_guardado}")
+    
+    # 2. Ahora sí, escalamos para detener la ejecución de los agentes
     tool_context.actions.escalate = True
     tool_context.actions.skip_summarization = True
-    return "Programa finalizado. Ahora sólo queda guardar."
+    
+    return f"Programa finalizado con éxito. Resultado: {resultado_guardado}"
 
 # Configuramos el modelo, asumiendo la configuración habitual
 model = LiteLlm(
@@ -348,21 +368,21 @@ refiner = LoopAgent(
     max_iterations=10
 )
 
-saver = LlmAgent(
-    name="Saver",
-    description="Su único trabajo es guardar el código Multi-Agente generado",
-    model=model,
-    tools=[save_mas_code],
-    output_key="save_info",
-    instruction=get_instructions("saver.md")
-)
+#saver = LlmAgent(
+#    name="Saver",
+#    description="Su único trabajo es guardar el código Multi-Agente generado",
+#    model=model,
+#    tools=[save_mas_code],
+#    output_key="save_info",
+#    instruction=get_instructions("saver.md")
+#)
 
-root_agent = SequentialAgent(
-    name="BDI_Developer",
-    description="Pipeline completo para el desarrollo proyectos Multi-Agente BDI en Jason: investigación → programación → validación → testeo → guardado",
-    sub_agents=[refiner, saver]
-)
-
+#root_agent = SequentialAgent(
+#    name="BDI_Developer",
+#    description="Pipeline completo para el desarrollo proyectos Multi-Agente BDI en Jason: investigación → programación → validación → testeo → guardado",
+#    sub_agents=[refiner, saver]
+#)
+root_agent = refiner
 # root_agent = LlmAgent(
 #     name="BDI_Developer",
 #     model=model,
